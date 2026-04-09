@@ -107,6 +107,7 @@ echo '{"status": "listening", "title": "", "artist": "", "album": "", "art_url":
 ```
 
 ## Project Structure
+```
 vinylDisplay/
 ├── app.py                  Flask server + audio detection loop
 ├── install.sh              One-line installer
@@ -117,7 +118,8 @@ vinylDisplay/
 ├── static/
 │   └── style.css           Display styling
 └── config/
-└── vinylapp.service    Systemd service file
+    └── vinylapp.service    Systemd service file
+```
 
 ## Troubleshooting
 
