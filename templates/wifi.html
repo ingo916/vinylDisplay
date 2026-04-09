@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NowPlaying — WiFi Setup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0a; color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh; padding: 24px;
+    }
+    h1 {
+      font-size: 20px; font-weight: 600;
+      color: #e8a800; margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+    .subtitle {
+      font-size: 13px; color: #555;
+      margin-bottom: 24px;
+    }
+    .scan-btn {
+      background: #e8a800; color: #000;
+      border: none; padding: 10px 20px;
+      border-radius: 8px; font-size: 14px;
+      font-weight: 600; cursor: pointer;
+      margin-bottom: 20px; width: 100%;
+    }
+    .scan-btn:disabled { background: #444; color: #666; cursor: not-allowed; }
+    .network-list { display: flex; flex-direction: column; gap: 10px; }
+    .network-item {
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      border-radius: 10px; padding: 14px 16px;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .network-item:hover { border-color: #e8a800; }
+    .network-name { font-size: 15px; font-weight: 500; }
+    .network-meta { font-size: 12px; color: #555; margin-top: 4px; }
+    .signal-bar { display: inline-block; margin-right: 8px; }
+    .password-form {
+      background: #1a1a1a; border: 1px solid #e8a800;
+      border-radius: 10px; padding: 16px; margin-top: 16px;
+    }
+    .password-form h3 { font-size: 14px; color: #e8a800; margin-bottom: 12px; }
+    .password-form input {
+      width: 100%; background: #0a0a0a; border: 1px solid #333;
+      border-radius: 8px; padding: 10px 12px; color: #fff;
+      font-size: 14px; margin-bottom: 10px; outline: none;
+    }
+    .password-form input:focus { border-color: #e8a800; }
+    .connect-btn {
+      background: #e8a800; color: #000; border: none;
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; width: 100%;
+    }
+    .cancel-btn {
+      background: transparent; color: #555;
+      border: 1px solid #333; padding: 10px 20px;
+      border-radius: 8px; font-size: 14px;
+      cursor: pointer; width: 100%; margin-top: 8px;
+    }
+    .status {
+      margin-top: 16px; padding: 12px;
+      border-radius: 8px; font-size: 14px;
+      text-align: center; display: none;
+    }
+    .status.success { background: #0d2e0d; color: #4caf50; border: 1px solid #4caf50; }
+    .status.error   { background: #2e0d0d; color: #f44336; border: 1px solid #f44336; }
+    .status.info    { background: #1a1400; color: #e8a800; border: 1px solid #e8a800; }
+    .loading { text-align: center; color: #555; padding: 20px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>♪ NowPlaying WiFi Setup</h1>
+  <p class="subtitle">Select a network to connect to</p>
+
+  <button class="scan-btn" id="scanBtn" onclick="scanNetworks()">Scan for Networks</button>
+
+  <div class="network-list" id="networkList"></div>
+
+  <div class="password-form" id="passwordForm" style="display:none">
+    <h3 id="selectedSSID"></h3>
+    <input type="password" id="passwordInput" placeholder="WiFi Password" autocomplete="off"/>
+    <button class="connect-btn" onclick="connectNetwork()">Connect</button>
+    <button class="cancel-btn" onclick="cancelConnect()">Cancel</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <script>
+    let selectedSSID = "";
+    let selectedSecurity = "";
+
+    async function scanNetworks() {
+      const btn = document.getElementById("scanBtn");
+      const list = document.getElementById("networkList");
+      btn.disabled = true;
+      btn.textContent = "Scanning...";
+      list.innerHTML = '<div class="loading">Scanning for networks...</div>';
+
+      try {
+        const res = await fetch("/wifi/scan");
+        const data = await res.json();
+        btn.disabled = false;
+        btn.textContent = "Scan Again";
+
+        if (data.error) {
+          list.innerHTML = `<div class="loading">Error: ${data.error}</div>`;
+          return;
+        }
+
+        if (data.networks.length === 0) {
+          list.innerHTML = '<div class="loading">No networks found. Try scanning again.</div>';
+          return;
+        }
+
+        list.innerHTML = data.networks.map(n => `
+          <div class="network-item" onclick="selectNetwork('${n.ssid.replace(/'/g, "\\'")}', '${n.security}')">
+            <div class="network-name">${n.ssid}</div>
+            <div class="network-meta">
+              <span class="signal-bar">${getSignalIcon(n.signal)}</span>
+              Signal: ${n.signal}% ${n.security ? "🔒" : "🔓"}
+            </div>
+          </div>
+        `).join("");
+      } catch(e) {
+        btn.disabled = false;
+        btn.textContent = "Scan Again";
+        list.innerHTML = `<div class="loading">Scan failed: ${e.message}</div>`;
+      }
+    }
+
+    function getSignalIcon(signal) {
+      const s = parseInt(signal);
+      if (s >= 75) return "▂▄▆█";
+      if (s >= 50) return "▂▄▆_";
+      if (s >= 25) return "▂▄__";
+      return "▂___";
+    }
+
+    function selectNetwork(ssid, security) {
+      selectedSSID = ssid;
+      selectedSecurity = security;
+      document.getElementById("selectedSSID").textContent = `Connect to: ${ssid}`;
+      document.getElementById("passwordInput").value = "";
+      document.getElementById("passwordForm").style.display = "block";
+      document.getElementById("passwordInput").focus();
+
+      if (!security || security === "--") {
+        document.getElementById("passwordInput").placeholder = "No password required";
+      } else {
+        document.getElementById("passwordInput").placeholder = "WiFi Password";
+      }
+    }
+
+    function cancelConnect() {
+      document.getElementById("passwordForm").style.display = "none";
+      selectedSSID = "";
+    }
+
+    async function connectNetwork() {
+      const password = document.getElementById("passwordInput").value;
+      const status = document.getElementById("status");
+
+      status.className = "status info";
+      status.textContent = `Connecting to ${selectedSSID}...`;
+      status.style.display = "block";
+
+      try {
+        const res = await fetch("/wifi/connect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ssid: selectedSSID, password: password })
+        });
+        const data = await res.json();
+
+        if (data.status === "connected") {
+          status.className = "status success";
+          status.textContent = `Connected to ${selectedSSID}! The display will restart shortly.`;
+          document.getElementById("passwordForm").style.display = "none";
+          setTimeout(() => { fetch("/wifi/reboot", { method: "POST" }); }, 3000);
+        } else {
+          status.className = "status error";
+          status.textContent = `Failed: ${data.message}`;
+        }
+      } catch(e) {
+        status.className = "status error";
+        status.textContent = `Error: ${e.message}`;
+      }
+    }
+  </script>
+</body>
+</html>

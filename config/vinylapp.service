@@ -1,0 +1,15 @@
+[Unit]
+Description=Vinyl Now Playing Flask App
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/vinylDisplay
+Environment=PATH=/home/pi/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 /home/pi/vinylDisplay/app.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

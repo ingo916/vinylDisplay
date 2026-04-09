@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Now Playing</title>
+  <link rel="stylesheet" href="/static/style.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app" class="idle">
+
+    <div class="idle-view">
+      <div class="pulse-wrap">
+        <div class="pulse-outer"></div>
+        <div class="pulse-mid"></div>
+        <div class="idle-icon">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="16" stroke="#b8860b" stroke-width="1.2" fill="none"/>
+            <circle cx="18" cy="18" r="10" stroke="#b8860b66" stroke-width="1" fill="none"/>
+            <circle cx="18" cy="18" r="4" stroke="#b8860b" stroke-width="1.2" fill="none"/>
+            <circle cx="18" cy="18" r="1.5" fill="#b8860b"/>
+          </svg>
+        </div>
+      </div>
+      <p class="idle-label">Listening for vinyl…</p>
+    </div>
+
+    <div class="playing-view">
+  <div class="content-wrap">
+    <div class="vinyl-wrap">
+      <div class="disc" id="disc">
+        <div class="disc-label">
+          <img id="albumArt" src="" alt=""/>
+          <div class="spindle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="info">
+      <span class="now-label">Now Playing</span>
+      <div class="divider"></div>
+      <h1 class="title" id="title">—</h1>
+      <h2 class="artist" id="artist">—</h2>
+      <p class="album" id="album"></p>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <script>
+    let lastTitle = "";
+    async function poll() {
+      try {
+        const res  = await fetch("/state");
+        const data = await res.json();
+        const app  = document.getElementById("app");
+        if (data.status === "playing") {
+          if (data.title !== lastTitle) {
+            lastTitle = data.title;
+            document.getElementById("title").textContent  = data.title;
+            document.getElementById("artist").textContent = data.artist;
+            document.getElementById("album").textContent  = data.album;
+            const art = document.getElementById("albumArt");
+            if (data.art_url) art.src = data.art_url;
+          }
+          app.className = "playing";
+        } else {
+          app.className = "idle";
+          lastTitle = "";
+        }
+      } catch(e) { console.log(e); }
+    }
+    poll();
+    setInterval(poll, 5000);
+  </script>
+</body>
+</html>

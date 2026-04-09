@@ -1,0 +1,202 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #080808;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.idle-view, .playing-view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
+}
+
+#app.idle .idle-view          { opacity: 1; pointer-events: all; }
+#app.idle .playing-view       { opacity: 0; pointer-events: none; }
+#app.playing .idle-view       { opacity: 0; pointer-events: none; }
+#app.playing .playing-view    { opacity: 1; }
+
+/* ── Idle ── */
+.idle-view {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-wrap {
+  position: relative;
+  width: 75vmin;  /* was 25vmin */
+  height: 75vmin;  /* was 25vmin */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4vmin;
+}
+
+.pulse-outer, .pulse-mid {
+  position: absolute;
+  border-radius: 50%;
+  border: 0.3vmin solid #b8860bbb;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+
+.pulse-outer { animation: pulse 2.5s ease-out infinite; }
+.pulse-mid   { animation: pulse 2.5s ease-out infinite 0.5s; }
+
+@keyframes pulse {
+  0%   { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.idle-icon {
+  width: 40vmin;  /* was 10vmin */
+  height: 40vmin;  /* was 10vmin */
+  position: relative;
+  z-index: 2;
+}
+.idle-icon svg { width: 100%; height: 100%; }
+
+.idle-label {
+  font-size: 6vmin;
+  letter-spacing: 0.25em;
+  color: #888;
+  text-transform: uppercase;
+}
+
+/* ── Now Playing ── */
+.playing-view {
+  padding: 3vmin;
+  background: radial-gradient(ellipse at 30% 50%, #1a1200 0%, #080808 70%);
+}
+
+.content-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4vw;
+  width: 100%;
+  height: 100%;
+  padding: 2vmin;
+}
+
+/* ── Disc fills half the screen height ── */
+.vinyl-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.disc {
+  width: min(45vw, 90vh);
+  height: min(45vw, 90vh);
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle at center,
+    #0d0d0d 0px, #181818 1.5px, #0d0d0d 3px, #141414 4.5px, #0d0d0d 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.3vmin solid #222;
+  box-shadow: 0 0 8vmin #00000099;
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.disc-label {
+  width: 42%;
+  height: 42%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 0.3vmin solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.disc-label img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.spindle {
+  width: 2vmin;
+  height: 2vmin;
+  border-radius: 50%;
+  background: #111;
+  border: 0.2vmin solid #555;
+  position: absolute;
+  z-index: 2;
+}
+
+/* ── Info fills remaining space ── */
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2vmin;
+  min-width: 0;
+  height: 100%;
+}
+
+.now-label {
+  font-size: 7vmin;  /* was 2vmin */
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: #e8a800;
+  text-transform: uppercase;
+}
+
+.divider {
+  width: 6vmin;
+  height: 0.25vmin;
+  background: #e8a800;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 6vw, 72px);  /* was 16px, 6vw, 72px */
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.artist {
+  font-size: clamp(26px, 4.5vw, 48px);  /* 12px, 3.5vw, 48px */
+  font-weight: 300;
+  color: #e8a800;
+}
+
+.album {
+  font-size: clamp(20px, 3vw, 28px);  /* 12px, 2vw, 28px */
+  color: #aaa;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
