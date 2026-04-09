@@ -191,3 +191,10 @@ def wifi_reboot():
 if __name__ == "__main__":
     threading.Thread(target=detection_loop, daemon=True).start()
     app.run(host="0.0.0.0", port=5000)
+
+@app.after_request
+def add_cache_headers(response):
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+    return response
