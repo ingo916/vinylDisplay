@@ -66,9 +66,10 @@ sudo reboot
 ```
 
 ## How It Works
+```
 ReSpeaker HAT → records 10s of audio → sends to ACRCloud
 → gets back song/artist/album → displays on screen
-
+```
 - While no music is detected the screen shows a pulsing idle animation
 - When a song is identified it fades in with the spinning vinyl disc and album art
 - Album art is fetched from ACRCloud or falls back to the iTunes API
@@ -79,12 +80,12 @@ ReSpeaker HAT → records 10s of audio → sends to ACRCloud
 If you move the display to a new location with no known WiFi networks the Pi will broadcast a hotspot called `NowPlaying-Setup` (password: `nowplaying`).
 
 Connect your phone or laptop to that network and go to:
-http://192.168.4.1:5000/wifi
+`http://192.168.4.1:5000/wifi`
 
 Select your network, enter the password and the Pi will connect and reboot automatically.
 
 You can also access the WiFi selector anytime while connected at:
-http://nowplaying.local:5000/wifi
+`http://nowplaying.local:5000/wifi`
 
 ## Testing Without a Microphone
 
