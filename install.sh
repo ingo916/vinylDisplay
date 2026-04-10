@@ -52,6 +52,8 @@ sudo apt install -y \
   xinit \
   openbox \
   chromium \
+  unclutter \
+  xdotool \
   python3-pip \
   python3-dev \
   portaudio19-dev \
@@ -174,6 +176,7 @@ echo 'pi ALL=(ALL) NOPASSWD: /sbin/reboot' | sudo tee /etc/sudoers.d/pi-reboot
 echo "► Configuring kiosk mode..."
 mkdir -p /home/pi/.config/openbox
 tee /home/pi/.config/openbox/autostart > /dev/null <<'EOF'
+unclutter -idle 0.1 -root &
 xset s off
 xset -dpms
 xset s noblank
@@ -205,6 +208,15 @@ EOF
 
 # ── Enable colored prompt ─────────────────────────────────
 sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/' /home/pi/.bashrc
+
+# ── Useful aliases ────────────────────────────────────────
+cat << 'ALIASES' >> /home/pi/.bashrc
+
+# vinylDisplay aliases
+alias nowtest='echo '"'"'{"status":"playing","title":"Cruel Summer","artist":"Taylor Swift","album":"Lover","art_url":"https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png"}'"'"' > ~/vinylDisplay/nowplaying.json'
+alias nowidle='echo '"'"'{"status":"listening","title":"","artist":"","album":"","art_url":""}'"'"' > ~/vinylDisplay/nowplaying.json'
+alias refreshdisplay='sudo systemctl restart vinylapp.service && sleep 2 && DISPLAY=:0 xdotool key ctrl+shift+r'
+ALIASES
 
 # ── Done ──────────────────────────────────────────────────
 echo ""
