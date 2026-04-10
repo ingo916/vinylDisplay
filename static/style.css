@@ -10,14 +10,14 @@
   --color-title:      #ffffff;
   --color-artist:     #e8a800;
   --color-album:      #aaaaaa;
-  --color-idle-text:  #888888;
+  --color-idle-text:  #c7c5c5;
 
   /* Font sizes — change these to resize text */
   --size-now-label:   3.5vw;  /*  was 2.5vw  */
   --size-title:       6vw;  /*  was 5.5vw  */
   --size-artist:      4vw;  /*  was 4vw  */
-  --size-album:       5vw;   /* was 5vw  */
-  --size-idle-label:  2.5vw;  /*  was 2.5vw  */
+  --size-album:       3.5vw;   /* was 5vw  */
+  --size-idle-label:  3.5vw;  /*  was 2.5vw  */
 
   /* Disc size — percentage of screen */
   --disc-size:        min(44vw, 88vh);
@@ -89,7 +89,7 @@ html, body {
 .pulse-outer, .pulse-mid {
   position: absolute;
   border-radius: 50%;
-  border: 0.3vmin solid #b8860bbb;
+  border: 0.3vmin solid #e8a800ff;
   top: 0; left: 0;
   width: 100%; height: 100%;
 }
