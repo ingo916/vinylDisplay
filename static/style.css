@@ -148,12 +148,12 @@ html, body {
   height: var(--disc-size);
   border-radius: 50%;
   background: repeating-radial-gradient(circle at center,
-    #0d0d0d 0px, #181818 1.5px, #0d0d0d 3px, #141414 4.5px, #0d0d0d 6px);
+    #1a1a1a 0px, #2d2d2d 1.5px, #1a1a1a 3px, #252525 4.5px, #1a1a1a 6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 0.3vmin solid #222;
-  box-shadow: 0 0 8vmin #00000099;
+  border: 0.5vmin solid #555;
+  box-shadow: 0 0 8vmin #00000099, 0 0 3vmin #444;
   animation: spin 4s linear infinite;
 }
 
