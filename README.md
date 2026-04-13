@@ -2,9 +2,10 @@
 
 A Raspberry Pi powered "Now Playing" display for your vinyl turntable. Detects what record is playing using ACRCloud audio fingerprinting and displays the album art, song title, artist and album name on a wall-mounted screen.
 
-![vinylDisplay showing Tool - Schism on Lateralus](images/display2.jpg)
-
-![vinylDisplay next to turntable](images/display1.jpg)
+<p>
+  <img src="images/display2.jpg" width="49%" alt="vinylDisplay close up">
+  <img src="images/display1.jpg" width="49%" alt="vinylDisplay next to turntable">
+</p>
 
 ## Hardware Required
 
