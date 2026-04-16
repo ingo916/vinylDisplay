@@ -34,9 +34,7 @@ echo "► ACRCloud Setup"
 echo "  You must have your ACRCloud credentials ready."
 echo "  Sign up free at https://acrcloud.com if you haven't."
 echo ""
-read -p "  ACRCloud Host (e.g. identify-us-west-2.acrcloud.com): " ACR_HOST
-read -p "  ACRCloud Access Key: " ACR_KEY
-read -p "  ACRCloud Access Secret: " ACR_SECRET
+read -p "  AudD API Token (get free at https://dashboard.audd.io): " AUDD_TOKEN
 echo ""
 
 # ── System update ─────────────────────────────────────────
@@ -90,9 +88,7 @@ curl -sSL $REPO/static/style.css -o $INSTALL_DIR/static/style.css
 
 # ── Inject ACRCloud credentials ───────────────────────────
 echo "► Configuring ACRCloud credentials..."
-sed -i "s|YOUR_HOST|$ACR_HOST|g" $INSTALL_DIR/app.py
-sed -i "s|YOUR_KEY|$ACR_KEY|g" $INSTALL_DIR/app.py
-sed -i "s|YOUR_SECRET|$ACR_SECRET|g" $INSTALL_DIR/app.py
+sed -i "s|YOUR_AUDD_TOKEN|$AUDD_TOKEN|g" $INSTALL_DIR/app.py
 
 # ── Create initial state file ─────────────────────────────
 echo '{"status": "listening", "title": "", "artist": "", "album": "", "art_url": ""}' \

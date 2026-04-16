@@ -6,9 +6,7 @@ from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
-ACR_HOST   = "identify-us-west-2.acrcloud.com"
-ACR_KEY    = "0dd64d02f5712245fec7385393d3100c"
-ACR_SECRET = "EnLvJpr77q2LSTpjpxiaKAfWpWAUl3SBDvEmRF0"
+AUDD_TOKEN = "1217146fda684c48b620a38eee65fa39"
 
 STATE_FILE     = "/home/pi/vinylDisplay/nowplaying.json"
 RECORD_SECONDS = 10
